@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Job & Internship Recommendation Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --card-bg: rgba(15, 23, 42, 0.92);
+      --card-soft: rgba(15, 23, 42, 0.75);
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.2);
+      --accent2: #38bdf8;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: rgba(148, 163, 184, 0.25);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.8);
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, #0ea5e9 0, #020617 45%)
+          fixed,
+        radial-gradient(circle at bottom right, #22c55e 0, #020617 55%) fixed;
+      color: var(--text-main);
+    }
+
+    .app-shell {
+      max-width: 1200px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+    }
+
+    header {
+      max-width: 1200px;
+      margin: 16px auto 8px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.9),
+        rgba(15, 23, 42, 0.7)
+      );
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.85);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 0, #22c55e, #22c55e 30%, #0f172a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: #f9fafb;
+      box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
+    }
+
+    .brand-text-main {
+      font-weight: 650;
+      font-size: 18px;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .brand-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .pill-outline {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+    }
+
+    .btn-chip {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-main);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      transition: background var(--transition-fast), transform 0.12s ease;
+    }
+
+    .btn-chip:hover {
+      background: rgba(15, 23, 42, 0.95);
+      transform: translateY(-1px);
+    }
+
+    .btn-logout {
+      background: rgba(248, 113, 113, 0.18);
+      border-color: rgba(248, 113, 113, 0.65);
+      color: #fecaca;
+    }
+
+    /* AUTH VIEW */
+
+    #authView {
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 430px;
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 22px 22px 20px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-glow {
+      position: absolute;
+      inset: -120px;
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.18), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(34, 197, 94, 0.18), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(75, 85, 99, 0.85);
+      margin-bottom: 16px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      font-size: 13px;
+      padding: 7px 0;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      transition: background var(--transition-med), color var(--transition-med),
+        transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .auth-tab.active {
+      background: linear-gradient(135deg, #22c55e, #38bdf8);
+      color: #020617;
+      font-weight: 600;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+      transform: translateY(-0.5px);
+    }
+
+    .auth-heading {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .auth-subtext {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(51, 65, 85, 0.9);
+      background: rgba(15, 23, 42, 0.92);
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+      transition: border var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), transform 0.1s ease-out;
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      border-color: rgba(56, 189, 248, 0.9);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5);
+      background: rgba(15, 23, 42, 0.98);
+      transform: translateY(-0.5px);
+    }
+
+    .input::placeholder,
+    .textarea::placeholder {
+      color: rgba(148, 163, 184, 0.8);
+    }
+
+    .textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 9px 0;
+      margin-top: 4px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #22c55e, #38bdf8);
+      color: #020617;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.7);
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out,
+        filter var(--transition-fast);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.02);
+      box-shadow: 0 18px 45px rgba(34, 197, 94, 0.9);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 1);
+    }
+
+    .error-text {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #fecaca;
+      background: rgba(248, 113, 113, 0.1);
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      display: none;
+    }
+
+    /* DASHBOARD VIEW */
+
+    #dashboardView {
+      margin-top: 26px;
+    }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.6fr);
+      gap: 18px;
+    }
+
+    .dash-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      padding: 16px 16px 14px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dash-card-soft {
+      background: var(--card-soft);
+    }
+
+    .dash-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .dash-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .dash-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.18);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .chip-accent {
+      background: var(--accent-soft);
+      color: #bbf7d0;
+      border-color: rgba(34, 197, 94, 0.6);
+    }
+
+    .profile-name {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .profile-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .tag-row {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: #e5e7eb;
+    }
+
+    .pill-ghost {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-inline {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-main);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      transition: background var(--transition-fast), transform 0.1s ease-out;
+    }
+
+    .btn-inline:hover {
+      background: rgba(15, 23, 42, 1);
+      transform: translateY(-1px);
+    }
+
+    .btn-inline-accent {
+      background: rgba(34, 197, 94, 0.12);
+      border-color: rgba(34, 197, 94, 0.7);
+      color: #bbf7d0;
+    }
+
+    .btn-inline-accent:hover {
+      background: rgba(34, 197, 94, 0.2);
+    }
+
+    .btn-inline-muted {
+      background: rgba(31, 41, 55, 0.95);
+      border-color: rgba(75, 85, 99, 0.9);
+    }
+
+    .resume-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at 0 0, rgba(34, 197, 94, 0.22), transparent 55%),
+        rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(34, 197, 94, 0.6);
+      font-size: 12px;
+    }
+
+    .resume-score {
+      font-size: 22px;
+      font-weight: 700;
+      color: #bbf7d0;
+    }
+
+    .resume-note {
+      margin-top: 3px;
+      color: var(--text-muted);
+    }
+
+    .badge-soft {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #bae6fd;
+      border: 1px solid rgba(56, 189, 248, 0.5);
+    }
+
+    .jobs-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .list-scroll {
+      max-height: 360px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .job-card {
+      border-radius: var(--radius-lg);
+      padding: 10px 11px;
+      margin-bottom: 8px;
+      background: rgba(15, 23, 42, 0.97);
+      border: 1px solid rgba(51, 65, 85, 0.95);
+      transition: transform 0.12s ease-out, border-color var(--transition-fast),
+        box-shadow var(--transition-fast), background var(--transition-fast);
+      cursor: default;
+    }
+
+    .job-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(56, 189, 248, 0.7);
+      box-shadow: 0 14px 26px rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .job-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .job-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .job-skills {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .job-footer {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+    }
+
+    .btn-mini {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: background var(--transition-fast), transform 0.1s ease-out;
+    }
+
+    .btn-mini:hover {
+      background: rgba(30, 64, 175, 0.95);
+      transform: translateY(-0.5px);
+    }
+
+    .match-chip {
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.15);
+      color: #bbf7d0;
+      border: 1px solid rgba(34, 197, 94, 0.6);
+    }
+
+    .empty-state {
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 16px 4px;
+    }
+
+    /* RECRUITER PANEL */
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 12px;
+    }
+
+    .mini-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .success-text {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.16);
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid rgba(22, 163, 74, 0.5);
+      display: none;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 960px) {
+      .dash-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      header {
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+      }
+
+      .jobs-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .dash-card {
+        padding: 14px 12px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-icon">JR</div>
+      <div class="brand-stack">
+        <div class="brand-text-main">JobRoute</div>
+        <div class="brand-text-sub">Tier-2 & Tier-3 Talent Network</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="pill-outline">
+        <span class="badge-dot"></span>
+        <span id="headerStatusText">Guest Mode • Not signed in</span>
+      </div>
+      <button id="headerLogoutBtn" class="btn-chip btn-logout hidden">
+        Logout
+      </button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <!-- AUTH VIEW -->
+    <section id="authView">
+      <div class="auth-card">
+        <div class="auth-glow"></div>
+        <div class="auth-tabs">
+          <button id="tabLogin" class="auth-tab active">Student Login</button>
+          <button id="tabRegister" class="auth-tab">Create Account</button>
+        </div>
+
+        <div id="authLoginPanel">
+          <div class="auth-heading">Welcome back 👋</div>
+          <div class="auth-subtext">
+            Sign in to see curated internships & jobs, tailored to your skills.
+          </div>
+
+          <label class="field-label" for="loginEmail">Email</label>
+          <input
+            id="loginEmail"
+            class="input"
+            type="email"
+            placeholder="you@example.com"
+            value="test@example.com"
+          />
+
+          <label class="field-label" for="loginPassword">Password</label>
+          <input
+            id="loginPassword"
+            class="input"
+            type="password"
+            placeholder="••••••••"
+            value="123456"
+          />
+
+          <div id="loginError" class="error-text"></div>
+          <button id="loginBtn" class="btn-primary">Sign in</button>
+        </div>
+
+        <div id="authRegisterPanel" class="hidden">
+          <div class="auth-heading">Join JobRoute ✨</div>
+          <div class="auth-subtext">
+            Create a profile, add your skills, and get intelligent matches.
+          </div>
+
+          <label class="field-label" for="regName">Full Name</label>
+          <input
+            id="regName"
+            class="input"
+            type="text"
+            placeholder="Bharath Reddy"
+          />
+
+          <label class="field-label" for="regEmail">Email</label>
+          <input
+            id="regEmail"
+            class="input"
+            type="email"
+            placeholder="you@example.com"
+          />
+
+          <label class="field-label" for="regPassword">Password</label>
+          <input
+            id="regPassword"
+            class="input"
+            type="password"
+            placeholder="Choose a strong password"
+          />
+
+          <label class="field-label" for="regCityType">City Type</label>
+          <select id="regCityType" class="select">
+            <option value="Tier-2">Tier-2</option>
+            <option value="Tier-3">Tier-3</option>
+            <option value="Any">Any / Other</option>
+          </select>
+
+          <label class="field-label" for="regSkills">
+            Skills (comma separated)
+          </label>
+          <textarea
+            id="regSkills"
+            class="textarea"
+            placeholder="Java, React, Android, SQL"
+          ></textarea>
+
+          <div id="registerError" class="error-text"></div>
+          <button id="registerBtn" class="btn-primary">Create account</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD VIEW -->
+    <section id="dashboardView" class="hidden">
+      <div class="dash-grid">
+        <!-- LEFT: Profile + Resume Score + Recruiter Form -->
+        <div class="dash-card dash-card-soft">
+          <div class="dash-card-header">
+            <div>
+              <div class="dash-title" id="dashWelcome">Hi, Student</div>
+              <div class="dash-sub" id="dashMeta">
+                City type • Skills snapshot
+              </div>
+            </div>
+            <div class="chip chip-accent">
+              <span class="status-dot"></span>
+              Connected
+            </div>
+          </div>
+
+          <div class="profile-meta" id="dashSkillsText"></div>
+
+          <div class="tag-row" id="dashSkillTags"></div>
+
+          <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <button id="btnGetRec" class="btn-inline btn-inline-accent">
+              Get recommended roles
+            </button>
+            <button id="btnResumeScore" class="btn-inline btn-inline-muted">
+              Check resume score
+            </button>
+          </div>
+
+          <div id="resumeBox" class="resume-box hidden"></div>
+
+          <div style="margin-top: 16px; border-top: 1px dashed rgba(75,85,99,0.8); padding-top: 10px;">
+            <div class="dash-card-header" style="margin-bottom: 6px;">
+              <div>
+                <div class="dash-title" style="font-size: 14px;">
+                  Recruiter • Post an opening
+                </div>
+                <div class="dash-sub">
+                  Add a role (demo – no auth) and it appears in the jobs feed.
+                </div>
+              </div>
+              <span class="badge-soft">Beta</span>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <div class="mini-label">Job Title</div>
+                <input
+                  id="jobTitle"
+                  class="input"
+                  type="text"
+                  placeholder="Frontend Intern"
+                />
+              </div>
+              <div>
+                <div class="mini-label">Company</div>
+                <input
+                  id="jobCompany"
+                  class="input"
+                  type="text"
+                  placeholder="Your Startup Name"
+                />
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-top: 6px;">
+              <div>
+                <div class="mini-label">Location</div>
+                <input
+                  id="jobLocation"
+                  class="input"
+                  type="text"
+                  placeholder="Remote / Hyderabad"
+                />
+              </div>
+              <div>
+                <div class="mini-label">Type</div>
+                <select id="jobType" class="select">
+                  <option value="Internship">Internship</option>
+                  <option value="Job">Full-time Job</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-top: 6px;">
+              <div class="mini-label">Preferred City Type</div>
+              <select id="jobCityPref" class="select">
+                <option value="Any">Any</option>
+                <option value="Tier-2">Tier-2</option>
+                <option value="Tier-3">Tier-3</option>
+              </select>
+            </div>
+
+            <div style="margin-top: 6px;">
+              <div class="mini-label">Required Skills (comma separated)</div>
+              <input
+                id="jobSkills"
+                class="input"
+                type="text"
+                placeholder="React, JavaScript, HTML, CSS"
+              />
+            </div>
+
+            <div style="margin-top: 6px;">
+              <div class="mini-label">Deadline (YYYY-MM-DD)</div>
+              <input
+                id="jobDeadline"
+                class="input"
+                type="text"
+                placeholder="2025-12-31"
+              />
+            </div>
+
+            <div id="jobSuccess" class="success-text">
+              Job posted successfully & added to All Jobs.
+            </div>
+
+            <div style="margin-top: 8px; display:flex; justify-content:flex-end;">
+              <button id="btnPostJob" class="btn-inline btn-inline-muted">
+                Post job
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Jobs + Recommendations -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div>
+              <div class="dash-title">Opportunities</div>
+              <div class="dash-sub">
+                Curated list of jobs & internships for Tier-2 / Tier-3 students.
+              </div>
+            </div>
+            <span class="chip">
+              <span class="badge-dot"></span>
+              Live feed
+            </span>
+          </div>
+
+          <div class="jobs-layout">
+            <!-- All Jobs -->
+            <div>
+              <div class="dash-card-header" style="margin-bottom: 6px;">
+                <div class="dash-title" style="font-size: 14px;">All Jobs</div>
+                <span class="chip">Everyone</span>
+              </div>
+              <div id="jobsList" class="list-scroll">
+                <div class="empty-state">Loading jobs...</div>
+              </div>
+            </div>
+
+            <!-- Recommended -->
+            <div>
+              <div class="dash-card-header" style="margin-bottom: 6px;">
+                <div class="dash-title" style="font-size: 14px;">
+                  Recommended for You
+                </div>
+                <span class="chip chip-accent">Smart Match</span>
+              </div>
+              <div id="recList" class="list-scroll">
+                <div class="empty-state">
+                  Click “Get recommended roles” on the left.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = "http://localhost:5000/api";
+
+    // Auth elements
+    const authView = document.getElementById("authView");
+    const dashboardView = document.getElementById("dashboardView");
+
+    const tabLogin = document.getElementById("tabLogin");
+    const tabRegister = document.getElementById("tabRegister");
+    const authLoginPanel = document.getElementById("authLoginPanel");
+    const authRegisterPanel = document.getElementById("authRegisterPanel");
+
+    const loginEmail = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginError = document.getElementById("loginError");
+
+    const regName = document.getElementById("regName");
+    const regEmail = document.getElementById("regEmail");
+    const regPassword = document.getElementById("regPassword");
+    const regCityType = document.getElementById("regCityType");
+    const regSkills = document.getElementById("regSkills");
+    const registerBtn = document.getElementById("registerBtn");
+    const registerError = document.getElementById("registerError");
+
+    // Header
+    const headerStatusText = document.getElementById("headerStatusText");
+    const headerLogoutBtn = document.getElementById("headerLogoutBtn");
+
+    // Dashboard elements
+    const dashWelcome = document.getElementById("dashWelcome");
+    const dashMeta = document.getElementById("dashMeta");
+    const dashSkillsText = document.getElementById("dashSkillsText");
+    const dashSkillTags = document.getElementById("dashSkillTags");
+
+    const btnGetRec = document.getElementById("btnGetRec");
+    const btnResumeScore = document.getElementById("btnResumeScore");
+    const resumeBox = document.getElementById("resumeBox");
+
+    const jobsList = document.getElementById("jobsList");
+    const recList = document.getElementById("recList");
+
+    const btnPostJob = document.getElementById("btnPostJob");
+    const jobTitle = document.getElementById("jobTitle");
+    const jobCompany = document.getElementById("jobCompany");
+    const jobLocation = document.getElementById("jobLocation");
+    const jobType = document.getElementById("jobType");
+    const jobCityPref = document.getElementById("jobCityPref");
+    const jobSkills = document.getElementById("jobSkills");
+    const jobDeadline = document.getElementById("jobDeadline");
+    const jobSuccess = document.getElementById("jobSuccess");
+
+    const logoutBtn = headerLogoutBtn;
+
+    let currentUser = null;
+
+    // Tab switching
+    tabLogin.addEventListener("click", () => {
+      tabLogin.classList.add("active");
+      tabRegister.classList.remove("active");
+      authLoginPanel.classList.remove("hidden");
+      authRegisterPanel.classList.add("hidden");
+      hideError(loginError);
+      hideError(registerError);
+    });
+
+    tabRegister.addEventListener("click", () => {
+      tabRegister.classList.add("active");
+      tabLogin.classList.remove("active");
+      authLoginPanel.classList.add("hidden");
+      authRegisterPanel.classList.remove("hidden");
+      hideError(loginError);
+      hideError(registerError);
+    });
+
+    // Helper: error
+    function showError(el, msg) {
+      el.textContent = msg;
+      el.style.display = "block";
+    }
+
+    function hideError(el) {
+      el.textContent = "";
+      el.style.display = "none";
+    }
+
+    // Login
+    loginBtn.addEventListener("click", async () => {
+      hideError(loginError);
+
+      const email = loginEmail.value.trim();
+      const password = loginPassword.value.trim();
+      if (!email || !password) {
+        showError(loginError, "Please enter email and password.");
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + "/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(loginError, data.message || "Login failed.");
+          return;
+        }
+        currentUser = data.user;
+        onAuthSuccess();
+      } catch (e) {
+        showError(loginError, "Network error while logging in.");
+      }
+    });
+
+    // Register
+    registerBtn.addEventListener("click", async () => {
+      hideError(registerError);
+
+      const name = regName.value.trim();
+      const email = regEmail.value.trim();
+      const password = regPassword.value.trim();
+      const cityType = regCityType.value;
+      const skillsRaw = regSkills.value.trim();
+
+      if (!name || !email || !password) {
+        showError(registerError, "Name, email & password are required.");
+        return;
+      }
+
+      const skills = skillsRaw
+        ? skillsRaw.split(",").map((s) => s.trim())
+        : [];
+
+      try {
+        const res = await fetch(API_BASE + "/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password, cityType, skills }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(registerError, data.message || "Registration failed.");
+          return;
+        }
+        currentUser = data.user;
+        onAuthSuccess();
+      } catch (e) {
+        showError(registerError, "Network error while registering.");
+      }
+    });
+
+    // Auth success
+    function onAuthSuccess() {
+      headerStatusText.textContent =
+        "Signed in as " +
+        currentUser.name +
+        " • " +
+        (currentUser.cityType || "City type N/A");
+      headerLogoutBtn.classList.remove("hidden");
+
+      dashWelcome.textContent = "Hi, " + currentUser.name;
+      dashMeta.textContent =
+        "City type: " +
+        (currentUser.cityType || "Not set") +
+        " • Smart matching enabled";
+
+      const skills = currentUser.skills || [];
+      dashSkillsText.textContent =
+        skills.length > 0
+          ? "Skills in profile: " + skills.join(", ")
+          : "No skills added yet – update your profile later for better matches.";
+
+      dashSkillTags.innerHTML = "";
+      if (skills.length === 0) {
+        const span = document.createElement("span");
+        span.className = "pill-ghost";
+        span.innerHTML = "Add skills to unlock better recommendations";
+        dashSkillTags.appendChild(span);
+      } else {
+        skills.slice(0, 6).forEach((sk) => {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = sk;
+          dashSkillTags.appendChild(tag);
+        });
+        if (skills.length > 6) {
+          const more = document.createElement("span");
+          more.className = "pill-ghost";
+          more.textContent = "+" + (skills.length - 6) + " more";
+          dashSkillTags.appendChild(more);
+        }
+      }
+
+      resumeBox.classList.add("hidden");
+      recList.innerHTML =
+        '<div class="empty-state">Click “Get recommended roles” on the left.</div>';
+
+      authView.classList.add("hidden");
+      dashboardView.classList.remove("hidden");
+
+      loadAllJobs();
+    }
+
+    // Logout
+    logoutBtn.addEventListener("click", () => {
+      currentUser = null;
+      headerStatusText.textContent = "Guest Mode • Not signed in";
+      headerLogoutBtn.classList.add("hidden");
+      authView.classList.remove("hidden");
+      dashboardView.classList.add("hidden");
+      resumeBox.classList.add("hidden");
+      jobsList.innerHTML = '<div class="empty-state">Loading jobs...</div>';
+    });
+
+    // Load all jobs
+    async function loadAllJobs() {
+      jobsList.innerHTML = '<div class="empty-state">Loading jobs...</div>';
+      try {
+        const res = await fetch(API_BASE + "/jobs");
+        const data = await res.json();
+        if (!Array.isArray(data) || data.length === 0) {
+          jobsList.innerHTML =
+            '<div class="empty-state">No jobs posted yet.</div>';
+          return;
+        }
+        jobsList.innerHTML = "";
+        data.forEach((job) => {
+          jobsList.appendChild(createJobCard(job, false));
+        });
+      } catch (e) {
+        jobsList.innerHTML =
+          '<div class="empty-state">Error loading jobs.</div>';
+      }
+    }
+
+    // Get recommendations
+    btnGetRec.addEventListener("click", async () => {
+      if (!currentUser) return;
+      recList.innerHTML =
+        '<div class="empty-state">Finding best matches for you...</div>';
+      try {
+        const res = await fetch(
+          API_BASE + "/recommendations/" + currentUser.id
+        );
+        const data = await res.json();
+        if (!Array.isArray(data) || data.length === 0) {
+          recList.innerHTML =
+            '<div class="empty-state">No strong matches yet. Try adding more skills or broadening your profile.</div>';
+          return;
+        }
+        recList.innerHTML = "";
+        data.forEach((job) => {
+          recList.appendChild(createJobCard(job, true));
+        });
+      } catch (e) {
+        recList.innerHTML =
+          '<div class="empty-state">Error loading recommendations.</div>';
+      }
+    });
+
+    // Resume score
+    btnResumeScore.addEventListener("click", async () => {
+      if (!currentUser) return;
+      resumeBox.classList.remove("hidden");
+      resumeBox.innerHTML =
+        '<span class="dash-sub">Crunching your skills and projects…</span>';
+      try {
+        const res = await fetch(API_BASE + "/resume-score", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            skills: currentUser.skills || [],
+            projectsCount: 2,
+          }),
+        });
+        const data = await res.json();
+        resumeBox.innerHTML =
+          '<div class="resume-score">' +
+          data.score +
+          "/100</div>" +
+          '<div class="resume-note">' +
+          data.feedback +
+          "</div>";
+      } catch (e) {
+        resumeBox.innerHTML =
+          '<span class="dash-sub">Error while calculating resume score.</span>';
+      }
+    });
+
+    // Recruiter: post job
+    btnPostJob.addEventListener("click", async () => {
+      jobSuccess.style.display = "none";
+
+      const title = jobTitle.value.trim();
+      const company = jobCompany.value.trim();
+      const location = jobLocation.value.trim();
+      const type = jobType.value;
+      const cityPreferenceValue = jobCityPref.value;
+      const skillsRaw = jobSkills.value.trim();
+      const deadline = jobDeadline.value.trim();
+
+      if (!title || !company || !location) {
+        jobSuccess.style.display = "block";
+        jobSuccess.textContent =
+          "Title, company and location are required to post a job.";
+        jobSuccess.style.color = "#fecaca";
+        jobSuccess.style.background = "rgba(248,113,113,0.16)";
+        jobSuccess.style.borderColor = "rgba(248,113,113,0.5)";
+        return;
+      }
+
+      const requiredSkills = skillsRaw
+        ? skillsRaw.split(",").map((s) => s.trim())
+        : [];
+
+      const cityPreference =
+        cityPreferenceValue === "Any"
+          ? ["Any"]
+          : [cityPreferenceValue];
+
+      try {
+        const res = await fetch(API_BASE + "/jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title,
+            company,
+            location,
+            type,
+            cityPreference,
+            requiredSkills,
+            description: "",
+            deadline: deadline || null,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.message || "Failed");
+        }
+
+        jobSuccess.style.display = "block";
+        jobSuccess.textContent =
+          "Job posted successfully & added to All Jobs.";
+        jobSuccess.style.color = "#bbf7d0";
+        jobSuccess.style.background = "rgba(22,163,74,0.16)";
+        jobSuccess.style.borderColor = "rgba(22,163,74,0.5)";
+
+        // Clear minimal
+        jobTitle.value = "";
+        jobCompany.value = "";
+        jobLocation.value = "";
+        jobSkills.value = "";
+        jobDeadline.value = "";
+
+        // Refresh jobs
+        loadAllJobs();
+      } catch (e) {
+        jobSuccess.style.display = "block";
+        jobSuccess.textContent = "Error posting job. Try again.";
+        jobSuccess.style.color = "#fecaca";
+        jobSuccess.style.background = "rgba(248,113,113,0.16)";
+        jobSuccess.style.borderColor = "rgba(248,113,113,0.5)";
+      }
+    });
+
+    // Job card factory
+    function createJobCard(job, showScore) {
+      const el = document.createElement("div");
+      el.className = "job-card";
+
+      const title = document.createElement("div");
+      title.className = "job-title";
+      title.textContent = job.title;
+      el.appendChild(title);
+
+      const meta = document.createElement("div");
+      meta.className = "job-meta";
+      meta.textContent =
+        (job.company || "Company") +
+        " • " +
+        (job.location || "Location") +
+        (job.type ? " • " + job.type : "");
+      el.appendChild(meta);
+
+      const skills = document.createElement("div");
+      skills.className = "job-skills";
+      const required = job.requiredSkills || [];
+      skills.textContent =
+        required.length > 0
+          ? "Required: " + required.join(", ")
+          : "Required skills not specified.";
+      el.appendChild(skills);
+
+      const footer = document.createElement("div");
+      footer.className = "job-footer";
+
+      const left = document.createElement("div");
+      left.style.display = "flex";
+      left.style.flexDirection = "column";
+      left.style.gap = "2px";
+
+      if (job.deadline) {
+        const dl = document.createElement("div");
+        dl.textContent = "Deadline: " + job.deadline;
+        dl.style.color = "var(--text-muted)";
+        left.appendChild(dl);
+      }
+
+      if (showScore && typeof job.matchScore !== "undefined") {
+        const ms = document.createElement("span");
+        ms.className = "match-chip";
+        ms.textContent = "Match: " + job.matchScore;
+        left.appendChild(ms);
+      }
+
+      footer.appendChild(left);
+
+      const right = document.createElement("div");
+      const btn = document.createElement("button");
+      btn.className = "btn-mini";
+      btn.textContent = "Save / Apply (UI demo)";
+      right.appendChild(btn);
+
+      footer.appendChild(right);
+      el.appendChild(footer);
+
+      return el;
+    }
+  </script>
+</body>
+</html>
